@@ -1,19 +1,9 @@
 import React, { useRef, useState } from "react";
 import Tile from "../Tile/Tile";
 import Referee from "../../referee/Referee";
+import { Piece, horizontal, vertical } from "../../Constants";
 
 import './Board.css';
-
-const horizontal = ["a", "b", "c", "d", "e", "f"];
-const vertical = ["1", "2", "3", "4", "5", "6"];
-
-export interface Piece {
-    image: string;
-    x: number;
-    y: number;
-    color: string;
-}
-
 
 export default function Board() {
     const boardRef = useRef<HTMLDivElement>(null);
@@ -127,34 +117,61 @@ export default function Board() {
     function dropPiece(e: React.MouseEvent) {
         e.preventDefault();
         const board = boardRef.current;
-        console.log(board);
+        //console.log(board);
         if (activePiece && board) {
             console.log("checking")
             const x = Math.floor((e.clientX - board.offsetLeft - 804) / 134) + horizontal.length;
             const y = Math.abs(Math.floor((e.clientY - board.offsetTop - 804) / 134)) - 1;
             
-            
-            //updates the position
-            setPieces((value) => {
-                const pieces = value.map((p) => {
-                    //console.log(p);
-                    if (p.x === gridX && p.y === gridY) {
-                        //console.log(x, y)
-                        const isValidMove = referee.isValidMove(gridX, gridY, x, y, p.color, value);
+            const currentPiece = pieces.find(p => p.x === gridX && p.y === gridY);
+            //const attackedPiece = pieces.find(p => p.x === x && p.y === y);
 
-                        if (isValidMove) {
-                            p.x = x;
-                            p.y = y;
-                        } else {
-                            activePiece.style.position = 'relative';
-                            activePiece.style.removeProperty('top');
-                            activePiece.style.removeProperty('left');
+            if (currentPiece) {
+                const isValidMove = referee.isValidMove(gridX, gridY, x, y, currentPiece.color, pieces);
+
+                if (isValidMove) {
+                    const updatePieces = pieces.reduce((results, piece) => {
+                        if (piece.x === gridX && piece.y === gridY) {
+                            piece.x = x;
+                            piece.y = y;
+                            results.push(piece);
+                        } else if (!(piece.x === x && piece.y === y)) {
+                            results.push(piece);
                         }
-                    }
-                    return p;
-                });
-                return pieces;
-            });
+                        return results;
+                    }, [] as Piece[]);
+
+                    setPieces(updatePieces);
+                } else {
+                    activePiece.style.position = 'relative';
+                    activePiece.style.removeProperty('top');
+                    activePiece.style.removeProperty('left');
+                }
+            }
+            
+
+
+            // //updates the position
+            // setPieces((value) => {
+            //     const pieces = value.map((p) => {
+            //         //console.log(p);
+            //         if (p.x === gridX && p.y === gridY) {
+            //             //console.log(x, y)
+            //             const isValidMove = referee.isValidMove(gridX, gridY, x, y, p.color, value);
+
+            //             if (isValidMove) {
+            //                 p.x = x;
+            //                 p.y = y;
+            //             } else {
+            //                 activePiece.style.position = 'relative';
+            //                 activePiece.style.removeProperty('top');
+            //                 activePiece.style.removeProperty('left');
+            //             }
+            //         }
+            //         return p;
+            //     });
+            //     return pieces;
+            // });
             setActivePiece(null);
         } 
     }

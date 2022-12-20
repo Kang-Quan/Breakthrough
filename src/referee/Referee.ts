@@ -1,4 +1,4 @@
-import { Piece } from "../components/Board/Board";
+import { Piece } from "../Constants";
 
 export default class Referee {
 
@@ -12,6 +12,24 @@ export default class Referee {
         // return false;
 
         const place = board.find((p) => p.x === x && p.y === y);
+
+        if (place) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    isBlockedSamePiece(x: number, y: number, board: Piece[], color: string): boolean{
+        // console.log(board.length)
+        // board.forEach((p) => {
+        //     if (p.x === x && p.y === y) {
+        //         return true;
+        //     }
+        // });
+        // return false;
+
+        const place = board.find((p) => p.x === x && p.y === y && p.color === color);
 
         if (place) {
             return true;
@@ -36,7 +54,7 @@ export default class Referee {
                         return true;
                     }
                 } else if (Math.abs(prevX - x) === 1) {
-                    return true;
+                    return !this.isBlockedSamePiece(x, y, boardState, color);
                 }
                 
             }
@@ -48,7 +66,7 @@ export default class Referee {
                         return true;
                     }
                 } else if (Math.abs(prevX - x) === 1) {
-                    return true;
+                    return !this.isBlockedSamePiece(x, y, boardState, color);
                 }
                 
             }
