@@ -1,0 +1,12 @@
+.tile {
+    height: 134px;
+    width: 134px;
+}
+
+.white-tile {
+    background-color: #D2B48C;
+}
+
+.black-tile {
+    background-color: #987554;
+}
