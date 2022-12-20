@@ -1,12 +1,22 @@
 import "./Tile.css";
 
 interface Props {
-    number: number  
+    image?: string;
+    number: number; 
+    color?: string;
 }
-export default function Tile({number}: Props) {
+export default function Tile({number, image, color}: Props) {
     if (number % 2 === 0) {
-        return <div className="tile white-tile"><img src="./assets/images/pawn_b.png" alt="white-pawn"/></div>
+        return (
+            <div className="tile white-tile">
+                {image && <div style={{backgroundImage: `url(${image})`}} className="piece"></div>}
+            </div>
+        );
     } else {
-        return <div className="tile black-tile"></div>
+        return (
+            <div className="tile black-tile">
+                {image && <div style={{backgroundImage: `url(${image})`}} className="piece"></div>}
+            </div>
+        );
     }
 }

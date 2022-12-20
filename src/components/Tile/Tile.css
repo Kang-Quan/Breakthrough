@@ -1,4 +1,6 @@
 .tile {
+    display: grid;
+    place-content: center;
     height: 134px;
     width: 134px;
 }
@@ -9,4 +11,25 @@
 
 .black-tile {
     background-color: #987554;
+}
+
+.tile img {
+    width: 95px;
+}
+
+.tile .piece {
+    display: grid;
+    width: 134px;
+    height: 134px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 95px;
+}
+
+.tile .piece:hover {
+    cursor: grab;
+}
+
+.tile .piece:active {
+    cursor: grabbing;
 }
