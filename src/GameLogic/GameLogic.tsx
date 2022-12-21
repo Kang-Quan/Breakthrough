@@ -9,28 +9,37 @@ import { HORIZONTAL, MAX_PAWN_MOVES, Piece, Position, samePosition, VERTICAL } f
 
 export default function GameLogic() {
     
-    function resetState() {
+    function resetState(isWhite: boolean) {
         const initialBoard: Piece[] = [];
     
         //fill the board with pawn
         for (let i = 0; i < HORIZONTAL.length; i++) {
             for (let j = 0; j < VERTICAL.length; j++) {
-                if ((j >=0 && j <= 1)) {
-                    initialBoard.push({image: "assets/images/pawn_w.png", position: {x: i, y: j}, color: "white-pawn"})
-                } else if ((j >= VERTICAL.length - 2 && j <= VERTICAL.length - 1)) {
-                    initialBoard.push({image: "assets/images/pawn_b.png", position: {x: i, y: j}, color: "black-pawn"})
+                if (isWhite) {
+                    if ((j >=0 && j <= 1)) {
+                        initialBoard.push({image: "assets/images/pawn_w.png", position: {x: i, y: j}, color: "white-pawn"})
+                    } else if ((j >= VERTICAL.length - 2 && j <= VERTICAL.length - 1)) {
+                        initialBoard.push({image: "assets/images/pawn_b.png", position: {x: i, y: j}, color: "black-pawn"})
+                    }
+                } else {
+                    if ((j >=0 && j <= 1)) {
+                        initialBoard.push({image: "assets/images/pawn_b.png", position: {x: i, y: j}, color: "white-pawn"})
+                    } else if ((j >= VERTICAL.length - 2 && j <= VERTICAL.length - 1)) {
+                        initialBoard.push({image: "assets/images/pawn_w.png", position: {x: i, y: j}, color: "black-pawn"})
+                    }
                 }
+                
             }
         }
         return initialBoard;
     }
 
-    function reset() {
-        const initialBoard: Piece[] = resetState();
+    function reset(isWhite: boolean) {
+        const initialBoard: Piece[] = resetState(isWhite);
         setPieces(initialBoard);
     }
 
-    const initialBoard: Piece[] = resetState();
+    const initialBoard: Piece[] = resetState(true);
     
     const [pieces, setPieces] = useState<Piece[]>(initialBoard);
 

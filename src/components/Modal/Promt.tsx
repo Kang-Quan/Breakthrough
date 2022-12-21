@@ -5,7 +5,7 @@ import "./Promt.css";
 
 
 interface Props {
-    reset: () => void;
+    reset: (isWhite: boolean) => void;
 }
 
 export default function Promt( {reset}: Props) {
@@ -16,9 +16,15 @@ export default function Promt( {reset}: Props) {
         setShow(false);
     };
 
-    const handleCloseReset = () => {
+    const handleCloseResetWhite = () => {
         setShow(false);
-        reset();
+        reset(true);
+        console.log("hi")
+    };
+
+    const handleCloseResetBlack = () => {
+        setShow(false);
+        reset(false);
         console.log("hi")
     };
   const handleShow = () => setShow(true);
@@ -42,10 +48,10 @@ export default function Promt( {reset}: Props) {
           Choose Your Color!!!
         </Modal.Body>
         <Modal.Footer id="footer">
-            <Button variant="light" onClick={handleCloseReset} id="button" >
+            <Button variant="light" onClick={handleCloseResetWhite} id="button" >
                 White
             </Button>
-            <Button variant="dark" onClick={handleCloseReset} >
+            <Button variant="dark" onClick={handleCloseResetBlack} >
                 Black
             </Button>
         </Modal.Footer>
