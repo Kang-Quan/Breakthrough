@@ -1,29 +1,20 @@
 import React, { useRef, useState } from "react";
 import Tile from "../Tile/Tile";
-import Referee from "../../referee/Referee";
 import { Piece, HORIZONTAL , VERTICAL , Position, BOARD_SIZE, GRID_SIZE, samePosition } from "../../Constants";
 
 import './Board.css';
 
-export default function Board() {
+
+interface Props {
+    getPossibleMoves: () => void;
+    playMove: (piece: Piece, position: Position) => boolean;
+    pieces: Piece[];
+}
+
+export default function Board( {getPossibleMoves, playMove, pieces } : Props ) {
     const boardRef = useRef<HTMLDivElement>(null);
-    const referee = new Referee();
-
-    const initialBoard: Piece[] = [];
-
-    //fill the board with pawns
-    for (let i = 0; i < HORIZONTAL.length; i++) {
-        for (let j = 0; j < VERTICAL.length; j++) {
-            if ((j >=0 && j <= 1)) {
-                initialBoard.push({image: "assets/images/pawn_w.png", position: {x: i, y: j}, color: "white-pawn"})
-            } else if ((j >= VERTICAL.length - 2 && j <= VERTICAL.length - 1)) {
-                initialBoard.push({image: "assets/images/pawn_b.png", position: {x: i, y: j}, color: "black-pawn"})
-            }
-        }
-    }
-
     const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
-    const [pieces, setPieces] = useState<Piece[]>(initialBoard);
+    
     const [grabPosition, setGrabPosition] = useState<Position>({x: 0, y: 0});
     
     
@@ -48,20 +39,12 @@ export default function Board() {
         }
     }
 
-    function updateValidMoves() {
-        setPieces((currentPieces) => {
-            return currentPieces.map(p => {
-                p.possibleMoves = referee.getValidMoves(p, currentPieces);
-                return p;
-            });
-        });
-    }
 
     function grabPiece(e: React.MouseEvent) {
         e.preventDefault();
         const element = e.target as HTMLElement;
         const board = boardRef.current;
-        updateValidMoves();
+        getPossibleMoves();
         
         if (element.classList.contains("piece") && board) {
             const gridX = Math.floor((e.clientX - board.offsetLeft - BOARD_SIZE) / GRID_SIZE) + HORIZONTAL.length;
@@ -105,7 +88,7 @@ export default function Board() {
         const board = boardRef.current;
         //console.log(board);
         if (activePiece && board) {
-            console.log("checking")
+            //console.log("checking")
             const x = Math.floor((e.clientX - board.offsetLeft - BOARD_SIZE) / GRID_SIZE) + HORIZONTAL.length;
             const y = Math.abs(Math.ceil((e.clientY - board.offsetTop - BOARD_SIZE) / GRID_SIZE));
             
@@ -115,29 +98,14 @@ export default function Board() {
             //const attackedPiece = pieces.find(p => p.x === x && p.y === y);
 
             if (currentPiece) {
-                const isValidMove = referee.isValidMove(grabPosition.x, grabPosition.y, x, y, currentPiece.color, pieces);
-
-                if (isValidMove) {
-                    const updatePieces = pieces.reduce((results, piece) => {
-                        if (samePosition(piece.position, grabPosition)) {
-                            piece.position.x = x;
-                            piece.position.y = y;
-                            results.push(piece);
-                        } else if (!(samePosition(piece.position, newPosition))) {
-                            results.push(piece);
-                        }
-                        return results;
-                    }, [] as Piece[]);
-
-                    setPieces(updatePieces);
-                } else {
-                    activePiece.style.position = 'relative';
-                    activePiece.style.removeProperty('top');
-                    activePiece.style.removeProperty('left');
+                var success = playMove(currentPiece, newPosition);
+                if (!success) {
+                    activePiece.style.position = "relative";
+                    activePiece.style.removeProperty("top");
+                    activePiece.style.removeProperty("left");
                 }
             }
             setActivePiece(null);
-
         } 
     }
     return (

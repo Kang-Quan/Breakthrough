@@ -1,10 +1,10 @@
 import './App.css';
-import Board from './components/Board/Board';
+import GameLogic from './GameLogic/GameLogic';
 
 function App() {
   return (
     <div id="app">
-      <Board/>
+      <GameLogic/>
     </div>
   );
 }

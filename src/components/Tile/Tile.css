@@ -34,7 +34,16 @@
     cursor: grabbing;
 }
 
-.tile-highlight::before {
+.tile-highlight.piece-circle::before {
+    position: absolute;
+    content: " ";
+    width: 124px;
+    height: 124px;
+    border: 5px solid rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+}
+
+.tile-highlight:not(.piece-circle)::before {
     content: " ";
     width: 25px;
     height: 25px;

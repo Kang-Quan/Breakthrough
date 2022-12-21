@@ -10,7 +10,8 @@ export default function Tile({number, image, color, highlight}: Props) {
     const className: string = ["tile",
         number % 2 === 0 && "black-tile",
         number % 2 !== 0 && "white-tile",
-        highlight && "tile-highlight"].filter(Boolean).join(' ');
+        highlight && "tile-highlight",
+        image && "piece-circle"].filter(Boolean).join(' ');
 
     return (
         <div className={className}>
