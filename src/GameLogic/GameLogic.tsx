@@ -1,21 +1,40 @@
 import { useState } from "react";
 import Board from "../components/Board/Board";
+import Promt from "../components/Modal/Promt";
 import { HORIZONTAL, MAX_PAWN_MOVES, Piece, Position, samePosition, VERTICAL } from "../Constants";
 
-export default function GameLogic() {
-    const initialBoard: Piece[] = [];
 
-    //fill the board with pawns
-    for (let i = 0; i < HORIZONTAL.length; i++) {
-        for (let j = 0; j < VERTICAL.length; j++) {
-            if ((j >=0 && j <= 1)) {
-                initialBoard.push({image: "assets/images/pawn_w.png", position: {x: i, y: j}, color: "white-pawn"})
-            } else if ((j >= VERTICAL.length - 2 && j <= VERTICAL.length - 1)) {
-                initialBoard.push({image: "assets/images/pawn_b.png", position: {x: i, y: j}, color: "black-pawn"})
+
+
+
+export default function GameLogic() {
+    
+    function resetState() {
+        const initialBoard: Piece[] = [];
+    
+        //fill the board with pawn
+        for (let i = 0; i < HORIZONTAL.length; i++) {
+            for (let j = 0; j < VERTICAL.length; j++) {
+                if ((j >=0 && j <= 1)) {
+                    initialBoard.push({image: "assets/images/pawn_w.png", position: {x: i, y: j}, color: "white-pawn"})
+                } else if ((j >= VERTICAL.length - 2 && j <= VERTICAL.length - 1)) {
+                    initialBoard.push({image: "assets/images/pawn_b.png", position: {x: i, y: j}, color: "black-pawn"})
+                }
             }
         }
+        return initialBoard;
     }
+
+    function reset() {
+        const initialBoard: Piece[] = resetState();
+        setPieces(initialBoard);
+    }
+
+    const initialBoard: Piece[] = resetState();
+    
     const [pieces, setPieces] = useState<Piece[]>(initialBoard);
+
+    
 
     function getPossibleMoves() {
         setPieces((currentPieces) => {
@@ -139,7 +158,8 @@ export default function GameLogic() {
 
 
     return (
-    <>
+    <>  
+        <Promt reset={reset}/>
         <Board getPossibleMoves={getPossibleMoves} 
             playMove={playMove}
             pieces={pieces}

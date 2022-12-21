@@ -20,3 +20,8 @@ export const MAX_PAWN_MOVES = 3;
 export function samePosition(p1: Position, p2: Position) {
     return p1.x === p2.x && p1.y === p2.y;
 }
+
+export interface player {
+    isUp: boolean;
+    isWhite: boolean;
+}
