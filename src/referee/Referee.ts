@@ -1,17 +1,9 @@
-import { Piece } from "../Constants";
+import { MAX_PAWN_MOVES, Piece, Position } from "../Constants";
 
 export default class Referee {
 
     isBlocked(x: number, y: number, board: Piece[]): boolean{
-        // console.log(board.length)
-        // board.forEach((p) => {
-        //     if (p.x === x && p.y === y) {
-        //         return true;
-        //     }
-        // });
-        // return false;
-
-        const place = board.find((p) => p.x === x && p.y === y);
+        const place = board.find((p) => p.position.x === x && p.position.y === y);
 
         if (place) {
             return true;
@@ -21,15 +13,7 @@ export default class Referee {
     }
 
     isBlockedSamePiece(x: number, y: number, board: Piece[], color: string): boolean{
-        // console.log(board.length)
-        // board.forEach((p) => {
-        //     if (p.x === x && p.y === y) {
-        //         return true;
-        //     }
-        // });
-        // return false;
-
-        const place = board.find((p) => p.x === x && p.y === y && p.color === color);
+        const place = board.find((p) => p.position.x === x && p.position.y === y && p.color === color);
 
         if (place) {
             return true;
@@ -72,5 +56,32 @@ export default class Referee {
             }
         }
         return false;
+    }
+
+    getValidMoves(piece: Piece, board: Piece[]) : Position[] {
+        const posibleMoves: Position[] = [];
+
+        if (piece.color === "white-pawn") {
+            for (let i = 0; i < MAX_PAWN_MOVES; i++) {
+                if (this.isValidMove(piece.position.x, 
+                    piece.position.y, piece.position.x + i - 1, 
+                    piece.position.y + 1, piece.color, board)) {
+
+                    posibleMoves.push({x: piece.position.x + i - 1,
+                        y: piece.position.y + 1})
+                }
+            }
+        } else {
+            for (let i = 0; i < MAX_PAWN_MOVES; i++) {
+                if (this.isValidMove(piece.position.x, 
+                    piece.position.y, piece.position.x + i - 1, 
+                    piece.position.y - 1, piece.color, board)) {
+
+                    posibleMoves.push({x: piece.position.x + i - 1,
+                        y: piece.position.y - 1})
+                }
+            }
+        }
+        return posibleMoves;
     }
 }
