@@ -16,7 +16,7 @@ export default function Board( {getPossibleMoves, playMove, pieces } : Props ) {
     const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
     
     const [grabPosition, setGrabPosition] = useState<Position>({x: 0, y: 0});
-    
+
     
     let board = [];
     //set up the board
@@ -86,16 +86,13 @@ export default function Board( {getPossibleMoves, playMove, pieces } : Props ) {
     function dropPiece(e: React.MouseEvent) {
         e.preventDefault();
         const board = boardRef.current;
-        //console.log(board);
         if (activePiece && board) {
-            //console.log("checking")
             const x = Math.floor((e.clientX - board.offsetLeft - BOARD_SIZE) / GRID_SIZE) + HORIZONTAL.length;
             const y = Math.abs(Math.ceil((e.clientY - board.offsetTop - BOARD_SIZE) / GRID_SIZE));
             
             const newPosition = {x: x, y: y};
 
             const currentPiece = pieces.find(p => samePosition(p.position, grabPosition));
-            //const attackedPiece = pieces.find(p => p.x === x && p.y === y);
 
             if (currentPiece) {
                 var success = playMove(currentPiece, newPosition);
@@ -103,7 +100,7 @@ export default function Board( {getPossibleMoves, playMove, pieces } : Props ) {
                     activePiece.style.position = "relative";
                     activePiece.style.removeProperty("top");
                     activePiece.style.removeProperty("left");
-                }
+                } 
             }
             setActivePiece(null);
         } 

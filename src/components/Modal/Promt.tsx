@@ -8,7 +8,7 @@ interface Props {
     reset: (isWhite: boolean) => void;
 }
 
-export default function Promt( {reset}: Props) {
+export default function Promt( {reset }: Props) {
   const [show, setShow] = useState(false);
 
     //i need to reset board here and I need to swap the size of the board
@@ -19,13 +19,11 @@ export default function Promt( {reset}: Props) {
     const handleCloseResetWhite = () => {
         setShow(false);
         reset(true);
-        console.log("hi")
     };
 
     const handleCloseResetBlack = () => {
         setShow(false);
         reset(false);
-        console.log("hi")
     };
   const handleShow = () => setShow(true);
 
