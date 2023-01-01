@@ -89,7 +89,7 @@ export default function GameLogic() {
 
 
     //This function moves a piece from previous position to the new position
-    function playMove(currPiece: Piece, newPosition: Position) : boolean {
+    async function playMove(currPiece: Piece, newPosition: Position) : Promise<boolean> {
         // we can check if the final position is winning here
         const x = currPiece.position.x
         const y = currPiece.position.y;
@@ -122,11 +122,22 @@ export default function GameLogic() {
             setPieces(() => newArr);
             //use api to get the moves
             //then call makeAMove
-            //we will check the winning move in makeAMove
-            //makeAMove({x: 1, y: 1}, {x: 0, y: 0}, newArr);
-            //makeAMove({x: 0, y: 4}, {x: 0, y: 3}, newArr); 
-            //makeAMove({x: 0, y: 3}, {x: 0, y: 2}, newArr);  
-            makeAMove({x: 4, y: 4}, {x: 3, y: 3}, newArr); 
+            const nextMove = await fetch("http://localhost:5000/move", 
+                { method: 'POST', body :JSON.stringify(newArr), headers: { 'Content-Type' : 'application/json', 'Accept': 'application/json'} }).then(async (res) => {
+                const resJson = await res.json()
+                if (!res.ok) {
+                    return console.error(resJson);
+                }
+                return resJson;
+            }) 
+            //console.log(nextMove)
+            if (nextMove) {
+                const prevX: number = parseInt(nextMove["prevX"]) 
+                const prevY: number = parseInt(nextMove["prevY"]) 
+                const newX: number = parseInt(nextMove["newX"]) 
+                const newY: number = parseInt(nextMove["newY"]) 
+                makeAMove({x: prevX, y: prevY}, {x: newX, y: newY}, newArr); 
+            }
         } else {
             return false;
         }
@@ -224,6 +235,9 @@ export default function GameLogic() {
             return false;
         }
     }
+
+    
+
     return (
     <>  
         <Promt reset={reset} />

@@ -7,7 +7,7 @@ import './Board.css';
 
 interface Props {
     getPossibleMoves: () => void;
-    playMove: (piece: Piece, position: Position) => boolean;
+    playMove: (piece: Piece, position: Position) => Promise<boolean>;
     pieces: Piece[];
 }
 
@@ -83,7 +83,7 @@ export default function Board( {getPossibleMoves, playMove, pieces } : Props ) {
         }
     }
 
-    function dropPiece(e: React.MouseEvent) {
+    async function dropPiece(e: React.MouseEvent) {
         e.preventDefault();
         const board = boardRef.current;
         if (activePiece && board) {
@@ -95,7 +95,8 @@ export default function Board( {getPossibleMoves, playMove, pieces } : Props ) {
             const currentPiece = pieces.find(p => samePosition(p.position, grabPosition));
 
             if (currentPiece) {
-                var success = playMove(currentPiece, newPosition);
+                var success = await playMove(currentPiece, newPosition);
+                
                 if (!success) {
                     activePiece.style.position = "relative";
                     activePiece.style.removeProperty("top");
